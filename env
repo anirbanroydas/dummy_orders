@@ -1,0 +1,5 @@
+export SANIC_APP_ORDERS_SETTINGS="<path/to/your/.sanic_app_settings.env>"
+export DEPLOY_TYPE=virtualenv
+export DEPLOYMENT_ENVIRONMENT="<dev|pro>
+
+export LOG_LEVEL="<info|error|debug>"

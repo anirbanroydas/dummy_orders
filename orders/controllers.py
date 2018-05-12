@@ -55,7 +55,6 @@ async def _processTransaction(app, body):
     hasException = False
     try:
         resp = await app.TransInteractor.process(transReq)
-        log.debug("transactionHandler: app.TransInteractor.process -> resp: {}".format(resp))
     except Exception:
         # raise ServerError('Something Bad Happened')
         resp = response.json(

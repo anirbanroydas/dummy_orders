@@ -1,9 +1,12 @@
+"""The order module of the package domain contains all Classes and Methods describing
+Order. 
+
+It consists of OrderItem domain entity and Order domain Entity. It also has am
+interface definition named Repository.
+"""
+
+
 import abc
-
-# from orders.log import getCustomLogger
-
-
-# log = getCustomLogger(__name__)
 
 
 class OrderItem(object):

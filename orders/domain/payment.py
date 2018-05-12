@@ -1,8 +1,18 @@
+"""The payment module of the package domain contains all Classes and Methods describing
+Payment.
+
+It consists of an interface PaymentProcessor which other specific Pyament Processors
+implement, for example, PaytmPaymentProcessor, ICICIDebitPaymentProcessor, HDFCCredictPaymentProcessor,
+AmazonPayPaymentProcessor, etc. It exposes the method which these concrete payment processors
+need to implement.
+
+It also has all the concrete implementations of PaymentProcessors mentioned above.
+"""
+
+
 import abc
 import random
 from asyncio import sleep
-
-#from sanic.log import logger as log
 
 from orders.log import getCustomLogger
 
@@ -12,8 +22,8 @@ log = getCustomLogger(__name__)
 
 # Interface
 class PaymentProcessor(metaclass=abc.ABCMeta):
-    """An inteface which constitutes of method that different payment type involved 
-    in a Transaction must implement
+    """An inteface which constitutes of method that different payment processor
+    involved in a Transaction must implement
     
     For example, it can be a Debit Card Payment, it can be Paytm Wallet Payment,
     etc, and each of those payment type will. The reason for keeping PyamentInfo as

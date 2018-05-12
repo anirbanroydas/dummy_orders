@@ -22,7 +22,7 @@ cleanup() {
 
 
 # first remove previous venv if at all
-rmmenv
+rmvenv
 # now begine new deployment
 virtualenv --python=python3 venv
 if [ $? -ne 0 ]; then
@@ -44,7 +44,9 @@ else
 				cleanup
 			else
 				# initialize the environment variables
+				set -a
 				source .env
+				set +a
 				if [ $? -ne 0 ]; then
 					cleanup
 				else

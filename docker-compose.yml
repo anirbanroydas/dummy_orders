@@ -1,0 +1,57 @@
+version: "3"
+
+services:
+
+  orders:
+    image: aroyd/orders:${ORDERS_IMAGE_DEV_TAG:-latest}
+    ports:
+      - "9001:9001"
+    env_file:
+      - .env
+    environment:
+      ENV: DEV
+    networks:
+      - dummysensi-net
+    depends_on:
+      - rabbitmq
+  
+  alertman:
+    image: aroyd/alertman:${ALERTMAN_IMAGE_DEV_TAG:-latest}
+    env_file:
+      - ../alertman/.env
+    environment:
+      ENV: DEV
+    networks:
+      - dummysensi-net
+    depends_on:
+      - rabbitmq
+  
+  fraud_police:
+    image: aroyd/fraud_police:${FRAUD_POLICE_IMAGE_DEV_TAG:-latest}
+    env_file:
+      - /Users/Roy/Documents/Golang/src/github.com/anirbanroydas/fraud_police/.env
+    environment:
+      ENV: DEV
+    networks:
+      - dummysensi-net
+  
+  rabbitmq:
+    image: rabbitmq:3.7.5-management-alpine
+    hostname: myrabbitmq
+    environment:
+      RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_DEFAULT_VHOST}
+    networks:
+      - dummysensi-net
+    volumes:
+      - rabbitmqvolume:/var/lib/rabbitmq/mnesia/rabbit@myrabbitmq
+
+networks:
+  dummysensi-net:
+    external: true
+
+volumes:
+  rabbitmqvolume:
+    external: true

@@ -1,5 +1,36 @@
-export SANIC_APP_ORDERS_SETTINGS="<path/to/your/.sanic_app_settings.env>"
-export DEPLOY_TYPE=virtualenv
-export DEPLOYMENT_ENVIRONMENT="<dev|pro>
+# sanic web server specific config
+SANIC_HOST=<orders|localhost|or_someother_hostname>
+SANIC_PORT=<some_port_to_start_orders_service>
+SANIC_WORKERS=<1|some_num_of_workers_based_on_cpu_count_preferably>
+SANIC_DEBUG=<True|False>
 
-export LOG_LEVEL="<info|error|debug>"
+SANIC_FRAUD_CHECKER_SERVICE_HOST=<fraud_police:port_based_on_fraud_police_settings|some_different_host:some_differt_port>
+SANIC_FRAUD_CHECKER_SERVICE_URI=/service/fraudpolice/api/v1/transaction/
+
+SANIC_ALERT_SENDER_SERVICE_HOST=<alertman:port_based_on_alertservice_if_exposing_http_api|or_may_be_not_required_if_alert_service_is_rabbitMq_based>
+SANIC_ALERT_SENDER_SERVICE_URI=</alert|or_may_be_not_required_because_of_reason_as_mentioned_just_above>
+
+SANIC_DB_HOST=<localhost|or_some_other_db_host>
+SANIC_DB_PORT=27017
+SANIC_DB_NAME=<some_database_name>
+SANIC_DB_USER=<some_db_user_name|or_may_be_empy>
+SANIC_DB_PASSWORD=<some_db_password|or_may_be_empy>
+
+SANIC_MESSAGE_BROKER_SERVICE_USERNAME=<some_rabbitmq_user_name_dependeng_on_setup_should_match_the_details_below|or_may_be_the_default_username_guest_should_match_the_details_below>
+SANIC_MESSAGE_BROKER_SERVICE_PASSWORD=<some_rabbitmq_password_dependeng_on_setup_should_match_the_details_below|or_may_be_the_default_password_guest_should_match_the_details_below>
+SANIC_MESSAGE_BROKER_SERVICE_HOST=<rabbitmq|or_some_different_rabbitmq_host_name_depending_on_setup>
+SANIC_MESSAGE_BROKER_SERVICE_PORT=5672
+SANIC_MESSAGE_BROKER_SERVICE_VIRTUALHOST=</|or_some_other_depending_on_setup_should_match_details_below>
+
+# env vars for rabbitmq docker image, may ignore if not deploying via docker
+RABBITMQ_ERLANG_COOKIE=<some_secret_cookie|or_keep_empty_even_if_setting_up_via_docker>
+RABBITMQ_DEFAULT_USER=<some_rabbitmq_username_dependeng_on_setup|or_may_be_the_default_username_guest>
+RABBITMQ_DEFAULT_PASS==<some_rabbitmq_password_dependeng_on_setup|or_may_be_the_default_password_guest>
+RABBITMQ_DEFAULT_VHOST=</|or_some_other_depending_on_setup
+
+# basic deployment related config
+DEPLOY_TYPE=<docker|virtualenv>
+DEPLOYMENT_ENVIRONMENT=<dev|prod>
+
+LOG_LEVEL=<info|debug|error>
+PYTHONASYNCIODEBUG=<0|1>

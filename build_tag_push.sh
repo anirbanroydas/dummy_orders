@@ -17,7 +17,7 @@ BRANCH="$2"
 COMMIT="$3"
 BUILD_DATE=$(date +%Y%m%dH%HM%MS%S)
 
-if [ ${#COMMIT} -ne 0 ] ; then
+if [ ! -z "$COMMIT" -a "$COMMIT"  != " " ] ; then
     echo "COMMIT is empty, adding date and time instead as tag value"
     BUILD_DATE=""
 fi

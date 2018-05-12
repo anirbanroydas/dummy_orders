@@ -11,7 +11,15 @@ from orders.domain.order import Repository
 log = getCustomLogger(__name__)
 
 
-class MongoDBClient(Repository):
+class DummyMongoDBClient(Repository):
+    """This implements the Repository interface described in the domain package.
+
+    This is a mongodb based implementation of the Repository to findByID and store
+    some data to mongodb database.
+
+    This is a dummy implementation though.
+    """
+
     def __init__(self, host, port, name, user='', password='', *args, **kwargs):
         self._host = host
         self._port = port
@@ -42,7 +50,6 @@ class MongoDBClient(Repository):
         return dummyObject
     
     async def store(self, objToStore):
-        log.debug("MongoDBClient.store: objToStore: {}".format(objToStore))
         # mimic setting up time by sleeping asynchronously for half second
         await sleep(0.5)
         # update the transactionID to mimic something has been saved

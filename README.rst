@@ -49,11 +49,6 @@ Overview
 
 * **Service Details**
 
-  This service is server based microservice which exposes few api. Instead of that it just listens for alert events 
-  from a source (in this case, it is `RabbitMQ <https://www.rabbitmq.com/>`_, which for 
-  everyone's sake could also be `Redis <https://redis.io/>`_, or `Kafka <https://kafka.apache.org/>`_
-  or others.)
-
   This service is server based sample microservice app, this exposes some rest api, in this sample usecase, just one.
   **dummy_orders** which is pacakged as the name **orders** and hence we will refere to it as orders. I kept the project name
   as dummy_orders instead of orders becasuse a project name as generic as orders was not giving me good feels.

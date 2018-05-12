@@ -19,9 +19,9 @@ NAME = "orders"
 VERSION = '0.1'
 
 
-PACKAGES = ["orders", "orders.domain", "orders.usecases"]
+PACKAGES = ["orders"]
 
-PROJECT_URL = 'https://github.com/anirbanroydas/dummy-orders'
+PROJECT_URL = 'https://github.com/anirbanroydas/dummy_orders'
 
 AUTHOR = 'Anirban Roy Das'
 
@@ -120,7 +120,7 @@ setup(
     # https://packaging.python.org/en/latest/single_source_version.html
     version=VERSION,
 
-    description='A sample microservice in python for implementing a dummy orders service which processes transactions, alerts if there is a fraudulent transation',
+    description='A sample microservice in python implementing a dummy orders service which processes transactions, alerts if there is a fraudulent transation using alertman and fraud_police.',
 
     long_description=LONG_DESCRIPTION,
 

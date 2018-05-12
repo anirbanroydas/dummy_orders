@@ -1,22 +1,34 @@
+"""The fraudcheck module of the usecases package consists of all the interfaces and
+classes the describe the fraud checking methods.
+
+It has a FraudChecker interface which other concrete FraudCheckers like InProcessAlertSender,
+ExternalFraudChecker, etc implement.
+
+This package also consists of all those concrete FraudCheckers implementations mentioned
+above.
+"""
+
+
 import abc
 import random
 
 from asyncio import sleep
 
-# from orders.log import getCustomLogger
+from orders.log import getCustomLogger
 
 
-# log = getCustomLogger(__name__)
+log = getCustomLogger(__name__)
 
 
 # Interface
 class FraudChecker(metaclass=abc.ABCMeta):
-    """This is a fraud checking interface which exposes an isFraud method which
+    """This is an interface which exposes an isFraud method which
     actual FraudChecker implementor should implement and add custom logic to it.
 
     For example there can be a transaction fraud, there can be order related fraud, etc.
 	"""
 
+    @abc.abstractmethod
     async def isFraud(self, transactionObj):
         """This method takes in a obj whose fraudulency is to be checked.
 
@@ -27,7 +39,9 @@ class FraudChecker(metaclass=abc.ABCMeta):
 
         
 class InProcessFraudChecker(FraudChecker):
-    """Checks for fraudulency of a Transaction. This implements the FraudChecker Interface"""
+    """This is a sample in pocesss fraud chekcer which does not
+    communicate with any other external service.
+    """
 
     async def isFraud(self, transaction):
         """Returns True/False randomly beacuse it is a dummy service implementation.
@@ -45,8 +59,8 @@ class InProcessFraudChecker(FraudChecker):
         # choose a random number and return Flase when the number is divisible by 3
         # This is to return True 2/3rd of the time and return False 1/4th of the time
         # but still keeping the random behaviour
-        num = random.randint(1, 999999999)
-        if num % 4 == 0:
+        num = random.randint(1, 1000)
+        if num % 51 == 0:
             return False
         return True
 
@@ -60,7 +74,10 @@ class ExternalFraudChecker(FraudChecker):
         self._gateway = gateway
 
     async def isFraud(self, transaction):
-        """Returns True/False randomly beacuse it is a dummy service implementation."""
+        """Takes an transaction object as input and sends an appropriate
+        request to some external service and get a response from the service as
+        to whether the transaction is fraudulent or not using the gateway.
+        """
 
         # first create the appropriate message(post body) that needs to be sent accordingly via the gateway
         transMsg = self._createTransactionMessage(transaction)
@@ -74,13 +91,17 @@ class ExternalFraudChecker(FraudChecker):
             # Log and raise error
             raise exc
         # successful response
-        return resp
+        if ('code' in resp and resp['code'] != 200) or (
+                'message' in resp and 'isFraud' not in resp['message']):
+            raise Exception("Fraud Checker Service returned some error \
+                or mismatched response, resp: {}".format(resp))
+        
+        return resp['message']['isFraud']
     
     #---------------------------------------#
     #           Private Methods             #
     #---------------------------------------#
     
     def _createTransactionMessage(self, transaction):
-        # for now send the transaction as it is, for real app, there may be some additional data
-        # taht may be addeed
-        return transaction
+        transactionObj = transaction.toDict()
+        return transactionObj['Transaction']

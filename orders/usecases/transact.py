@@ -1,18 +1,25 @@
 """The usecases module consists of all the usecases of the business/application.
 
- Use Case:
- 0. Process Order
- 1. Process Transaction
- 2. Check Transaction for Fraud
- 3. Save Transaction
- 4. Alert/Notify when Fraudulent Transaction
+Use Case:
+0. Process Order
+1. Process Transaction
+2. Check Transaction for Fraud
+3. Save Transaction
+4. Alert/Notify when Fraudulent Transaction
 
- So by using the **Domain Experts** knowledge and seeing the **Ubiquitous Language**,
- we can derive at some domain objects
+Thus, the usecases package basically creates all the use cases and exposes 
+some interfaces to use them but doesnt depend on anything outside the usecases layer.
 
- This package basically creates all the use cases and exposes some interfaces
- to use them but doesnt depend on anything outside the usecases layer.
+The transact module of the usecases package consists of all the interfaces and
+classes the describe the transaction processing methods.
+
+It has a TransactionProcessor class which takes in different usecase interactors as
+dependencies and takes in and processes a transaction of type TransactionRequest.
+
+This package also consists Validator interface which other concrete TransactionValidator etc
+implements which validates a TransactionRequest object.
 """
+
 
 import abc
 
@@ -66,8 +73,8 @@ class TransactionProcessor(object):
         # step 1:  validate the Transaction Request -> Order, PaymentMethod, PaymentInfo
         isValid = self._validator.validate(transReq)
         if not isValid:
-            raise Exception("TransactionValidator returned invalid for {TransactionRequest: \
-                object: {}}".format(transReq))
+            raise Exception("TransactionValidator returned invalid for {{ TransactionRequest: \
+                object: {} }}".format(transReq))
         # step 2: Create new domain Transaction ojbect with fraud status false and transaction status pending
         transaction = self._createTransaction(transReq)
         try:
@@ -144,12 +151,9 @@ class TransactionProcessor(object):
             raise exc
 
     def _createTransaction(self, transReq):
-        """This method creates and returns a domain Transacion object
-		from the Transaction Request Object taken as an input parameter.
-		"""
-        
         transaction = Transaction(transReq.order, transReq.paymentMethod, transReq.payment)
-        log.info("New Transaction Created: {}".format(transaction))
+        log.debug("New Transaction Created: {}".format(transaction))
+        
         return transaction
             
 

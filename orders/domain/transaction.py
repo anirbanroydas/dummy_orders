@@ -1,4 +1,4 @@
-"""The domain module consists of all the core domain objects of the business/application.
+"""The domain package consists of all the core domain objects of the business/application.
 
  Domain:
  0. OrderItem - This specifies information about the items which consitute an order
@@ -25,20 +25,23 @@
  - Repository - Thigns which facilitate the access and storage of entities and
  aggregrates (if required).
 
- This package basically creates all the domain object and expose some interfaces
- to use them but doesnt depend on anything outside the domain layer
+ The `transaction` module of the domain package consists of all the Ttransaction related
+ classes and methods.
+ 
+ This basically creates all the domain object and expose some interfaces
+ to use them but doesnt depend on anything outside the domain layer.
 """
 
 
 import abc
 import time
 
-# from sanic.log import logger as log
 
 from orders.log import getCustomLogger
 
 
 log = getCustomLogger(__name__)
+
 
 # different tranaction statuses
 TRANSACTION_PENDING = 11
@@ -71,6 +74,7 @@ class Transaction(object):
     
     def __init__(self, order, paymentMethod, payment):
         self._transactionID = int(time.time()*1000)
+        self._userID = int(time.time()*1000)
         self._order = order
         self._paymentMethod = paymentMethod
         self._payment = payment
@@ -85,14 +89,12 @@ class Transaction(object):
             transactionEndTime: {7} }} }}'.format(self._transactionID, self._order,
                 self._paymentMethod, self._payment, self._status, self._fraudStatus,
                 self._transactionStartTime, self._transactionEndTime)
-    
+
     def updateFraudStatus(self, fraudStatus):
         self._fraudStatus = fraudStatus
     
     def updateStatus(self, status):
-        log.debug("prevstatus: {}, newstatus: {}".format(self._status, status))
         self._status = status
-        log.debug("updatedstatus: {}".format(self._status))
         
     def updateTransactionEndTime(self):
         self._transactionEndTime = int(time.time()*1000)
@@ -120,6 +122,21 @@ class Transaction(object):
     @property
     def status(self):
         return self._status
+    
+    def toDict(self):
+        return {
+            'Transaction': {
+                'transactionID': self._transactionID,
+                'userID': self._userID,
+                'order': self._order,
+                'paymentMethod': self._paymentMethod,
+                'payment': self._payment,
+                'status': self._status,
+                'fraudStatus': self._fraudStatus,
+                'transactionStartTime': self._transactionStartTime,
+                'transactionEndTime': self._transactionEndTime
+            }
+        }
     
     
 
